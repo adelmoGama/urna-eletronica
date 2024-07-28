@@ -26,6 +26,8 @@ public class Candidate {
     @Enumerated(EnumType.STRING)
     private ElectoralPositionsEnum position;
 
+    private Integer receivedVotes;
+
 
     @OneToMany(mappedBy = "candidate")
     private Set<Voter> votesReceived = new HashSet<>();

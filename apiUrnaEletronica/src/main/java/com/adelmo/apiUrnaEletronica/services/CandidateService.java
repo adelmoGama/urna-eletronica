@@ -29,4 +29,12 @@ public class CandidateService {
     public void deleteCandidate (Long id) {
         candidateRepository.deleteById(id);
     }
+
+    public void countingReceivedVotes (Candidate candidate) {
+        if(candidate.getReceivedVotes() != null) {
+            candidate.setReceivedVotes(candidate.getReceivedVotes()+1);
+        } else {
+            candidate.setReceivedVotes(1);
+        }
+    }
 }

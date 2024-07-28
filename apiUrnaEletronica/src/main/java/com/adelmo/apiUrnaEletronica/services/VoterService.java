@@ -18,6 +18,8 @@ public class VoterService {
     private VoterRepository voterRepository;
     @Autowired
     private CandidateRepository candidateRepository;
+    @Autowired
+    private CandidateService candidateService;
 
     public Voter createVoter (Voter voter) {
         return voterRepository.save(voter);
@@ -47,6 +49,9 @@ public class VoterService {
                 .orElseThrow(() -> new RuntimeException("Candidate not found on this session"));
 
         voter.setCandidate(candidate);
+
+        candidateService.countingReceivedVotes(candidate);
+
         voterRepository.save(voter);
     }
 }
