@@ -18,7 +18,7 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @PostMapping("/create")
-    public ResponseEntity<Candidate> createLegalResponsible(@RequestBody Candidate candidate) {
+    public ResponseEntity<Candidate> createCandidate(@RequestBody Candidate candidate) {
         return new ResponseEntity<>(candidateService.createCandidate(candidate), HttpStatus.CREATED);
     }
 
