@@ -23,9 +23,9 @@ public class VoterController {
         return new ResponseEntity<>(voterService.createVoter(voter), HttpStatus.CREATED);
     }
 
-    @PostMapping("/vote/{voterId}/{candidateId}")
-    public ResponseEntity<String> vote(@PathVariable Long voterId, @PathVariable Long candidateId) {
-        voterService.vote(voterId, candidateId);
+    @PostMapping("/vote/{voterId}/{candidateId}/{electionSessionId}")
+    public ResponseEntity<String> vote(@PathVariable Long voterId, @PathVariable Long candidateId, @PathVariable Long electionSessionId) {
+        voterService.vote(voterId, candidateId, electionSessionId);
 
         return ResponseEntity.status(HttpStatus.OK).body("Vote completed successfully.");
     }

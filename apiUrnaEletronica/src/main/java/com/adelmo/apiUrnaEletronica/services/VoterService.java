@@ -21,6 +21,8 @@ public class VoterService {
     private CandidateRepository candidateRepository;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private ElectionSessionService electionSessionService;
 
     public Voter createVoter (Voter voter) {
         try {
@@ -50,21 +52,28 @@ public class VoterService {
         }
     }
 
-    public void vote (Long voterId, Long candidateId) {
-        Voter voter = voterRepository.findById(voterId)
-                .orElseThrow(() -> new RuntimeException("Voter not found on this session"));
+    public void vote (Long voterId, Long candidateId, Long electionSessionId) {
+        Integer open = electionSessionService.isOpen(electionSessionId);
 
-        if(voter.getCandidate() != null) {
-            throw new ElectionExceptions("You already voted.");
+        if(open.equals(1)) {
+            Voter voter = voterRepository.findById(voterId)
+                    .orElseThrow(() -> new RuntimeException("Voter not found on this session"));
+
+            if(voter.getCandidate() != null) {
+                throw new ElectionExceptions("You already voted.");
+            }
+
+            Candidate candidate = candidateRepository.findById(candidateId)
+                    .orElseThrow(() -> new RuntimeException("Candidate not found on this session"));
+
+            voter.setCandidate(candidate);
+
+            candidateService.countingReceivedVotes(candidate);
+            electionSessionService.countingAllVotes(electionSessionId);
+
+            voterRepository.save(voter);
+        } else {
+            throw new ElectionExceptions("The session was not initializer.");
         }
-
-        Candidate candidate = candidateRepository.findById(candidateId)
-                .orElseThrow(() -> new RuntimeException("Candidate not found on this session"));
-
-        voter.setCandidate(candidate);
-
-        candidateService.countingReceivedVotes(candidate);
-
-        voterRepository.save(voter);
     }
 }
