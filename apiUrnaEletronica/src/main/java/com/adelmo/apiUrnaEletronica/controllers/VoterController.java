@@ -1,6 +1,7 @@
 package com.adelmo.apiUrnaEletronica.controllers;
 
 import com.adelmo.apiUrnaEletronica.entities.Voter;
+import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
 import com.adelmo.apiUrnaEletronica.services.VoterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,13 @@ public class VoterController {
         return new ResponseEntity<>(voterService.createVoter(voter), HttpStatus.CREATED);
     }
 
+    @PostMapping("/vote/{voterId}/{candidateId}")
+    public ResponseEntity<String> vote(@PathVariable Long voterId, @PathVariable Long candidateId) {
+        voterService.vote(voterId, candidateId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Vote completed successfully.");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Voter>> findVoterById(@PathVariable Long id) {
         Optional<Voter> voter = voterService.findVoterById(id);
@@ -38,5 +46,10 @@ public class VoterController {
     public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
         voterService.deleteVoter(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @ExceptionHandler(ElectionExceptions.class)
+    public ResponseEntity<String> handleElectionException(ElectionExceptions exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 }

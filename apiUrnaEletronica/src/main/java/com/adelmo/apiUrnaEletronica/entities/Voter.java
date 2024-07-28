@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,4 +20,8 @@ public class Voter {
     private Long id;
 
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "id_candidate")
+    private Candidate candidate;
 }
