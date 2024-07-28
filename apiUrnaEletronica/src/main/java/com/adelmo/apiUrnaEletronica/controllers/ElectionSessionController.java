@@ -1,5 +1,6 @@
 package com.adelmo.apiUrnaEletronica.controllers;
 
+import com.adelmo.apiUrnaEletronica.entities.Candidate;
 import com.adelmo.apiUrnaEletronica.entities.ElectionSession;
 import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
 import com.adelmo.apiUrnaEletronica.services.ElectionSessionService;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/election-session")
@@ -24,6 +27,13 @@ public class ElectionSessionController {
     public ResponseEntity<Void> closeElectionSession(@PathVariable Long id) {
         electionSessionService.closeElectionSession(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/{sessionId}")
+    public ResponseEntity<List<Candidate>> findCandidates(@PathVariable Long sessionId) {
+        List<Candidate> candidates = electionSessionService.getCandidatesBySessionId(sessionId);
+        System.out.println(electionSessionService.report(candidates));
+        return ResponseEntity.status(HttpStatus.OK).body(candidates);
     }
 
     @ExceptionHandler(ElectionExceptions.class)

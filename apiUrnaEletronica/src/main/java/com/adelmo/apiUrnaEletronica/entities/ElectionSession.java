@@ -17,5 +17,5 @@ public class ElectionSession {
 
     private Integer openElectionSession = 1;
 
-    private Integer numberOfVotes;
+    private Integer numberOfVotes = 0;
 }
