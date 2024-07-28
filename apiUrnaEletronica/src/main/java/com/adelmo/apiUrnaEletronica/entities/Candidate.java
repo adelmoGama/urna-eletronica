@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -25,10 +22,11 @@ public class Candidate {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "position")
     private ElectoralPositionsEnum position;
 
+    @Column(name = "received_votes")
     private Integer receivedVotes;
 
-    @OneToMany(mappedBy = "candidate")
-    private Set<Voter> votesReceived = new HashSet<>();
+    private Integer electionSessionId;
 }
