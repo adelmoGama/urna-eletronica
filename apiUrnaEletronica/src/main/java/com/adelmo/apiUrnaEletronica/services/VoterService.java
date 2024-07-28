@@ -6,6 +6,7 @@ import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
 import com.adelmo.apiUrnaEletronica.repositories.CandidateRepository;
 import com.adelmo.apiUrnaEletronica.repositories.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,11 @@ public class VoterService {
     private CandidateService candidateService;
 
     public Voter createVoter (Voter voter) {
-        return voterRepository.save(voter);
+        try {
+            return voterRepository.save(voter);
+        } catch (DataIntegrityViolationException exception) {
+            throw new ElectionExceptions("Voter with the name, " + voter.getName() + ", is already registered.");
+        }
     }
 
     public Optional<Voter> findVoterById (Long id) {
@@ -34,7 +39,15 @@ public class VoterService {
     }
 
     public void deleteVoter (Long id) {
-        voterRepository.deleteById(id);
+        Optional<Voter> voter = voterRepository.findById(id);
+
+        if(voter.isPresent()) {
+            if (voter.get().getCandidate() == null) {
+                voterRepository.deleteById(id);
+            } else {
+                throw new ElectionExceptions(voter.get().getName()+" already has voted and can't be deleted.");
+            }
+        }
     }
 
     public void vote (Long voterId, Long candidateId) {

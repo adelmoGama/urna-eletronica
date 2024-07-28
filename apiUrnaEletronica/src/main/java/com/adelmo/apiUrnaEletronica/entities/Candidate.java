@@ -21,13 +21,13 @@ public class Candidate {
     @Column(name = "id_candidate")
     private Long id;
 
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
     private ElectoralPositionsEnum position;
 
     private Integer receivedVotes;
-
 
     @OneToMany(mappedBy = "candidate")
     private Set<Voter> votesReceived = new HashSet<>();

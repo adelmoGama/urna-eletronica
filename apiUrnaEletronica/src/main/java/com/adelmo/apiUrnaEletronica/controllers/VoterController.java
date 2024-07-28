@@ -43,7 +43,7 @@ public class VoterController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVoter(@PathVariable Long id) {
         voterService.deleteVoter(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

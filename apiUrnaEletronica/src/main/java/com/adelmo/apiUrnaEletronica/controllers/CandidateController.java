@@ -1,6 +1,7 @@
 package com.adelmo.apiUrnaEletronica.controllers;
 
 import com.adelmo.apiUrnaEletronica.entities.Candidate;
+import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
 import com.adelmo.apiUrnaEletronica.services.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,10 @@ public class CandidateController {
     public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
         candidateService.deleteCandidate(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @ExceptionHandler(ElectionExceptions.class)
+    public ResponseEntity<String> handleElectionException(ElectionExceptions exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 }
