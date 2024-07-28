@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping(value = "/election-session")
 public class ElectionSessionController {
@@ -17,5 +19,10 @@ public class ElectionSessionController {
     @PostMapping("/create")
     public ResponseEntity<ElectionSession> createElectionSession(@RequestBody ElectionSession electionSession) {
         return new ResponseEntity<>(electionSessionService.createElectionSession(electionSession), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/close/{id}")
+    public ResponseEntity<Optional<ElectionSession>> closeElectionSession(@PathVariable Long id) {
+        return new ResponseEntity<>(electionSessionService.closeElectionSession(id), HttpStatus.OK);
     }
 }

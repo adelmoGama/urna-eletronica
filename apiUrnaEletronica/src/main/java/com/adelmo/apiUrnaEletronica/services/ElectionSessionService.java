@@ -5,6 +5,8 @@ import com.adelmo.apiUrnaEletronica.repositories.ElectionSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ElectionSessionService {
 
@@ -13,5 +15,13 @@ public class ElectionSessionService {
 
     public ElectionSession createElectionSession (ElectionSession electionSession) {
         return electionSessionRepository.save(electionSession);
+    }
+
+    public Optional<ElectionSession> closeElectionSession (Long id) {
+        Optional<ElectionSession> electionSession = electionSessionRepository.findById(id);
+
+        electionSession.ifPresent(session -> session.setClosedElectionSession(false));
+
+        return electionSession;
     }
 }
