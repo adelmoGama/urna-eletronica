@@ -26,7 +26,7 @@ public class Candidate {
     private ElectoralPositionsEnum position;
 
     @Column(name = "received_votes")
-    private Integer receivedVotes;
+    private Integer receivedVotes = 0;
 
     private Integer electionSessionId;
 }

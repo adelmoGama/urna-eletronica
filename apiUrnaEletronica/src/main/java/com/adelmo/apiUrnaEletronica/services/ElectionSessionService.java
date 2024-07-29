@@ -73,8 +73,19 @@ public class ElectionSessionService {
         return winnerName;
     }
 
+    public void checkingTheMinimumNumberOfVotes (Long id) {
+        Optional<ElectionSession> electionSession = electionSessionRepository.findById(id);
+
+        if(electionSession.get().getNumberOfVotes() <= 1) {
+            throw new ElectionExceptions("As the votes didn't reach the minimum number, we are canceling the election.");
+        }
+    }
+
     public String report(List<Candidate> candidates) {
+        checkingTheMinimumNumberOfVotes(Long.valueOf(candidates.get(0).getElectionSessionId()));
+
         StringBuilder report = new StringBuilder();
+
         int allVotes = 0;
 
         report.append("----------------------------------------").append("\n");
@@ -90,11 +101,6 @@ public class ElectionSessionService {
             String line = String.format("%-30s %-10d", candidate.getName(), candidate.getReceivedVotes());
             report.append(line).append("\n");
         }
-
-//        if(allVotes <= 1) {
-//            throw new ElectionExceptions("As the votes didn't reach the minimum number, we are canceling the election.");
-//
-//        }
 
         report.append("\n");
 
