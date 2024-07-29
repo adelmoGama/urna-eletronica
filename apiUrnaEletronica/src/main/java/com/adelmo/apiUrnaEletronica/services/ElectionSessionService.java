@@ -21,6 +21,7 @@ public class ElectionSessionService {
 
     public ElectionSession createElectionSession (ElectionSession electionSession) {
         electionSession.setOpenElectionSession(1);
+        electionSession.setNumberOfVotes(0);
         return electionSessionRepository.save(electionSession);
     }
 
