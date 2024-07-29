@@ -1,6 +1,7 @@
 package com.adelmo.apiUrnaEletronica.services;
 
 import com.adelmo.apiUrnaEletronica.entities.Candidate;
+import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,14 @@ public class ReportService {
     private ElectionSessionService electionSessionService;
 
     public String report(List<Candidate> candidates) {
+        if(candidates.isEmpty()) {
+            throw new ElectionExceptions("The reported session has no candidates.");
+        }
+
+        if(electionSessionService.isOpen((Long.valueOf(candidates.get(0).getElectionSessionId()))).equals(1)) {
+            throw new ElectionExceptions("The session is open and the report can't be generated.");
+        }
+
         electionSessionService.checkingTheMinimumNumberOfVotes(Long.valueOf(candidates.get(0).getElectionSessionId()));
 
         DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");
