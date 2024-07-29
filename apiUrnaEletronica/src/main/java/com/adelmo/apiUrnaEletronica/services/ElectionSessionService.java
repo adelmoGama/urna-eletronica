@@ -7,6 +7,7 @@ import com.adelmo.apiUrnaEletronica.repositories.ElectionSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ public class ElectionSessionService {
 
     @Autowired
     private ElectionSessionRepository electionSessionRepository;
+    @Autowired
+    private CandidateService candidateService;
 
     public ElectionSession createElectionSession (ElectionSession electionSession) {
         return electionSessionRepository.save(electionSession);
@@ -55,12 +58,16 @@ public class ElectionSessionService {
         }
     }
 
-    public String getSessionWinner (List<Candidate> candidates) {
+    public String getSessionWinner (Long electionSessionId) {
+        List<Candidate> candidates = candidateService.findCandidatesBySessionId(electionSessionId);
+
         String winnerName = "";
         int actualVotes = 0;
+
         for (Candidate candidate : candidates) {
             if(candidate.getReceivedVotes() > actualVotes) {
                 winnerName = candidate.getName();
+                actualVotes = candidate.getReceivedVotes();
             }
         }
         return winnerName;

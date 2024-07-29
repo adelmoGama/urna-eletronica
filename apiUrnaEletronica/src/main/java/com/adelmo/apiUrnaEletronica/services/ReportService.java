@@ -45,7 +45,7 @@ public class ReportService {
         String amountVotes = String.format("%-30s %-10s", "Votes Amount", allVotes);
         report.append(amountVotes).append("\n").append("\n");
 
-        String winnerName = electionSessionService.getSessionWinner(candidates);
+        String winnerName = electionSessionService.getSessionWinner(Long.valueOf(candidates.get(0).getElectionSessionId()));
 
         String winner = String.format("%-30s %-10s", "Winner", winnerName);
         report.append(winner).append("\n").append("\n");
