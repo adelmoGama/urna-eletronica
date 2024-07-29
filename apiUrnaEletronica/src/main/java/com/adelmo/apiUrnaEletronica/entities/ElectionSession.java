@@ -15,7 +15,7 @@ public class ElectionSession {
     @Column(name = "id_election_session")
     private Long id;
 
-    private Integer openElectionSession = 1;
+    private Integer openElectionSession;
 
     private Integer numberOfVotes = 0;
 }

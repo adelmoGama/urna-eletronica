@@ -20,6 +20,7 @@ public class ElectionSessionService {
     private CandidateService candidateService;
 
     public ElectionSession createElectionSession (ElectionSession electionSession) {
+        electionSession.setOpenElectionSession(1);
         return electionSessionRepository.save(electionSession);
     }
 
@@ -38,13 +39,13 @@ public class ElectionSessionService {
             electionSession.get().setNumberOfVotes(0);
 
             throw new ElectionExceptions("As there was only 1 vote, we are canceling this election.");
-
         }else if (electionSession.get().getNumberOfVotes().equals(0)) {
 
             throw new ElectionExceptions("As there was no vote, we are canceling this election.");
-
         } else {
             electionSession.get().setOpenElectionSession(0);
+            electionSessionRepository.save(electionSession.get());
+
         }
     }
 
