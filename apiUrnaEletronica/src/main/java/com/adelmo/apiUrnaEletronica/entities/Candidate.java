@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "tb_candidate")
-public class Candidate {
+public class Candidate implements Comparable<Candidate> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +29,15 @@ public class Candidate {
     private Integer receivedVotes = 0;
 
     private Integer electionSessionId;
+
+    @Override
+    public int compareTo(Candidate candidate) {
+        if(this.getReceivedVotes() < candidate.getReceivedVotes()) {
+            return -1;
+        }
+        if(this.getReceivedVotes() > candidate.getReceivedVotes()) {
+            return 1;
+        }
+        return 0;
+    }
 }

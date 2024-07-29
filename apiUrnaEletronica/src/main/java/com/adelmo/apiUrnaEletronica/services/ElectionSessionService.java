@@ -7,6 +7,7 @@ import com.adelmo.apiUrnaEletronica.repositories.ElectionSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,13 +61,18 @@ public class ElectionSessionService {
     public String getSessionWinner (Long electionSessionId) {
         List<Candidate> candidates = candidateService.findCandidatesBySessionId(electionSessionId);
 
-        String winnerName = "";
-        int actualVotes = 0;
+        Collections.sort(candidates);
+
+        String winnerName = candidates.get(candidates.size()-1).getName();
+
+        int actualVotes = candidates.get(candidates.size()-1).getReceivedVotes();
 
         for (Candidate candidate : candidates) {
-            if(candidate.getReceivedVotes() > actualVotes) {
-                winnerName = candidate.getName();
-                actualVotes = candidate.getReceivedVotes();
+            if(candidate.getName().equals(winnerName)) {
+                return winnerName;
+            }
+            if(candidate.getReceivedVotes() == actualVotes) {
+                throw new ElectionExceptions("We have a draw on this election.");
             }
         }
         return winnerName;
