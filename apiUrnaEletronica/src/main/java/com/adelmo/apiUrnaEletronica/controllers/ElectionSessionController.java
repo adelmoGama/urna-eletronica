@@ -3,7 +3,9 @@ package com.adelmo.apiUrnaEletronica.controllers;
 import com.adelmo.apiUrnaEletronica.entities.Candidate;
 import com.adelmo.apiUrnaEletronica.entities.ElectionSession;
 import com.adelmo.apiUrnaEletronica.exceptions.ElectionExceptions;
+import com.adelmo.apiUrnaEletronica.services.CandidateService;
 import com.adelmo.apiUrnaEletronica.services.ElectionSessionService;
+import com.adelmo.apiUrnaEletronica.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,10 @@ import java.util.List;
 public class ElectionSessionController {
     @Autowired
     private ElectionSessionService electionSessionService;
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private CandidateService candidateService;
 
     @PostMapping("/create")
     public ResponseEntity<ElectionSession> createElectionSession(@RequestBody ElectionSession electionSession) {
@@ -31,8 +37,8 @@ public class ElectionSessionController {
 
     @GetMapping("/{sessionId}")
     public ResponseEntity<List<Candidate>> findCandidates(@PathVariable Long sessionId) {
-        List<Candidate> candidates = electionSessionService.getCandidatesBySessionId(sessionId);
-        System.out.println(electionSessionService.report(candidates));
+        List<Candidate> candidates = candidateService.findCandidatesBySessionId(sessionId);
+        System.out.println(reportService.report(candidates));
         return ResponseEntity.status(HttpStatus.OK).body(candidates);
     }
 

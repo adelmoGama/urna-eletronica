@@ -55,25 +55,25 @@ public class VoterService {
     public void vote (Long voterId, Long candidateId, Long electionSessionId) {
         Integer open = electionSessionService.isOpen(electionSessionId);
 
-        if(open.equals(1)) {
-            Voter voter = voterRepository.findById(voterId)
-                    .orElseThrow(() -> new RuntimeException("Voter not found on this session"));
+            if(open.equals(1)) {
+                Voter voter = voterRepository.findById(voterId)
+                        .orElseThrow(() -> new RuntimeException("Voter not found on this session"));
 
-            if(voter.getCandidate() != null) {
-                throw new ElectionExceptions("You already voted.");
+                if (voter.getCandidate() != null) {
+                    throw new ElectionExceptions("You already voted.");
+                }
+
+                Candidate candidate = candidateRepository.findById(candidateId)
+                        .orElseThrow(() -> new RuntimeException("Candidate not found on this session"));
+
+                voter.setCandidate(candidate);
+
+                candidateService.countingReceivedVotes(candidate);
+                electionSessionService.countingAllVotes(electionSessionId);
+
+                voterRepository.save(voter);
+            } else {
+                throw new ElectionExceptions("The session is not open");
             }
-
-            Candidate candidate = candidateRepository.findById(candidateId)
-                    .orElseThrow(() -> new RuntimeException("Candidate not found on this session"));
-
-            voter.setCandidate(candidate);
-
-            candidateService.countingReceivedVotes(candidate);
-            electionSessionService.countingAllVotes(electionSessionId);
-
-            voterRepository.save(voter);
-        } else {
-            throw new ElectionExceptions("The session was not initializer.");
-        }
     }
 }

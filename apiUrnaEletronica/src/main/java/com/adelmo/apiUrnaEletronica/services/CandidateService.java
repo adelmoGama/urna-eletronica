@@ -32,6 +32,10 @@ public class CandidateService {
         return candidateRepository.findAll();
     }
 
+    public List<Candidate> findCandidatesBySessionId (Long electionSessionId) {
+        return candidateRepository.findByElectionSessionId(electionSessionId);
+    }
+
     public void deleteCandidate (Long id) {
         Optional<Candidate> candidate = candidateRepository.findById(id);
         if(candidate.isPresent()) {
